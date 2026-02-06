@@ -50,7 +50,6 @@
 </head>
 <body>
 
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="staff-dashboard.jsp">
@@ -77,7 +76,6 @@
     </div>
 </nav>
 
-<!-- Main Content -->
 <div class="container py-5">
     <div class="row mb-5">
         <div class="col-12 text-center">
@@ -87,7 +85,6 @@
     </div>
 
     <div class="row g-4 justify-content-center">
-        <!-- New Reservation -->
         <div class="col-md-4 col-lg-3">
             <div class="card h-100 text-center">
                 <div class="card-body py-5">
@@ -99,17 +96,6 @@
             </div>
         </div>
 
-
- 
-
-
-
-
-
-
-
-
-        <!-- Find Reservation -->
         <div class="col-md-4 col-lg-3">
             <div class="card h-100 text-center">
                 <div class="card-body py-5">
@@ -121,19 +107,17 @@
             </div>
         </div>
 
-        <!-- Generate Bill -->
         <div class="col-md-4 col-lg-3">
             <div class="card h-100 text-center">
                 <div class="card-body py-5">
                     <i class="bi bi-receipt-cutoff card-icon text-primary"></i>
                     <h5 class="card-title fw-bold">Generate Bill</h5>
                     <p class="card-text text-muted">Calculate and print guest invoice</p>
-                    <a href="bill.jsp" class="btn btn-primary btn-lg w-75">Generate</a>
+                    <a href="generate-bill?action=list" class="btn btn-primary btn-lg w-75">Generate</a>
                 </div>
             </div>
         </div>
 
-        <!-- Check-in / Check-out -->
         <div class="col-md-4 col-lg-3">
             <div class="card h-100 text-center">
                 <div class="card-body py-5">
@@ -145,7 +129,6 @@
             </div>
         </div>
 
-        <!-- Guest Management -->
         <div class="col-md-4 col-lg-3">
             <div class="card h-100 text-center">
                 <div class="card-body py-5">
@@ -157,7 +140,6 @@
             </div>
         </div>
 
-        <!-- Help & Guidelines -->
         <div class="col-md-4 col-lg-3">
             <div class="card h-100 text-center">
                 <div class="card-body py-5">
