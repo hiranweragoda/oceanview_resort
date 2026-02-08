@@ -1,12 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.oceanview.model.User" %>
+<%-- Import both models to avoid casting errors --%>
+<%@ page import="com.oceanview.model.User, com.oceanview.model.Admin" %>
 <%
-    User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    // Get the generic object from session
+    Object sessionUser = session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+    String displayName = "";
+
+    // Verify if the user is logged in and has the ADMIN role
+    if (sessionUser == null || !"ADMIN".equals(role)) {
         response.sendRedirect("index.jsp");
         return;
+    }
+
+    // Logic to determine display name from either Admin table or User table
+    if (sessionUser instanceof User) {
+        displayName = ((User) sessionUser).getUsername();
+    } else if (sessionUser instanceof Admin) {
+        displayName = ((Admin) sessionUser).getFullname();
     }
 %>
 <!DOCTYPE html>
@@ -20,11 +33,13 @@
 </head>
 <body class="bg-light">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container-fluid">
         <a class="navbar-brand" href="admin-dashboard.jsp">Ocean View Resort - Admin</a>
         <div class="navbar-nav ms-auto">
-            <span class="nav-link">Welcome, <%= user.getUsername() %></span>
+            <span class="nav-link text-white fw-bold">
+                <i class="bi bi-person-badge me-1"></i>Welcome, <%= displayName %>
+            </span>
             <a class="nav-link" href="logout">Logout</a>
         </div>
     </div>
@@ -33,21 +48,21 @@
 <div class="container mt-4">
     <h2 class="mb-4">Staff Management</h2>
 
+    <%-- Success/Error Alerts --%>
     <c:if test="${not empty success}">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            ${success}
+            <i class="bi bi-check-circle me-2"></i>${success}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </c:if>
     <c:if test="${not empty error}">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            ${error}
+            <i class="bi bi-exclamation-triangle me-2"></i>${error}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     </c:if>
 
-    <!-- Add New Staff Form -->
-    <div class="card mb-4 shadow-sm">
+    <div class="card mb-4 shadow-sm border-0">
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0">Add New Staff Member</h5>
         </div>
@@ -81,8 +96,7 @@
         </div>
     </div>
 
-    <!-- Staff List Table -->
-    <div class="card shadow-sm">
+    <div class="card shadow-sm border-0">
         <div class="card-header bg-info text-white">
             <h5 class="mb-0">Current Staff Members</h5>
         </div>
@@ -95,17 +109,17 @@
                             <th>Username</th>
                             <th>Full Name</th>
                             <th>Contact Number</th>
-                            <th>Actions</th>
+                            <th class="text-center">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <c:forEach var="s" items="${staffList}">
                             <tr>
                                 <td>${s.id}</td>
-                                <td>${s.username}</td>
+                                <td><span class="badge bg-light text-dark border">${s.username}</span></td>
                                 <td>${s.fullName}</td>
                                 <td>${s.contactNumber}</td>
-                                <td>
+                                <td class="text-center">
                                     <a href="staff?action=edit&id=${s.id}" class="btn btn-sm btn-warning">
                                         <i class="bi bi-pencil"></i> Edit
                                     </a>

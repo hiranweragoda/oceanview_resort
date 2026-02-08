@@ -1,12 +1,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false" %>  <!-- Force EL evaluation -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.oceanview.model.User" %>
+<%@ page isELIgnored="false" %>  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- Import both models to prevent ClassCastException --%>
+<%@ page import="com.oceanview.model.User, com.oceanview.model.Admin" %>
 <%
-    User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    // Fix: Use generic Object to safely handle both User and Admin objects
+    Object sessionUser = session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+    String username = "Admin";
+
+    // Security Check: Verify login and ADMIN role using the role string
+    if (sessionUser == null || !"ADMIN".equals(role)) {
         response.sendRedirect("index.jsp");
         return;
+    }
+
+    // Safely extract the username/fullname for display
+    if (sessionUser instanceof User) {
+        username = ((User) sessionUser).getUsername();
+    } else if (sessionUser instanceof Admin) {
+        username = ((Admin) sessionUser).getFullname();
     }
 %>
 <!DOCTYPE html>
@@ -24,7 +36,7 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="admin-dashboard.jsp">Ocean View Resort - Admin</a>
         <div class="navbar-nav ms-auto">
-            <span class="nav-link">Welcome, <%= user.getUsername() %></span>
+            <span class="nav-link">Welcome, <%= username %></span>
             <a class="nav-link" href="logout">Logout</a>
         </div>
     </div>
@@ -33,7 +45,6 @@
 <div class="container mt-4">
     <h2 class="mb-4">Room Type Management</h2>
 
-    <!-- Success / Error Messages -->
     <c:if test="${not empty success}">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             ${success}
@@ -47,7 +58,6 @@
         </div>
     </c:if>
 
-    <!-- Add New Room Type Form -->
     <div class="card mb-4 shadow-sm">
         <div class="card-header bg-primary text-white">
             <h5 class="mb-0">Add New Room Type</h5>
@@ -80,7 +90,6 @@
         </div>
     </div>
 
-    <!-- Room Types Table -->
     <div class="card shadow-sm">
         <div class="card-header bg-info text-white">
             <h5 class="mb-0">Existing Room Types</h5>

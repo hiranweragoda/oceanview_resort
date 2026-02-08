@@ -13,20 +13,15 @@ import java.util.List;
 public class StaffDAOImpl implements StaffDAO {
 
     @Override
-    public boolean addStaff(Staff staff, String plainPassword) {
-        if (plainPassword == null || plainPassword.trim().isEmpty()) {
-            return false;
-        }
-
-        String hashed = PasswordUtil.hashPassword(plainPassword);
-
+    public boolean addStaff(Staff staff) {
+        // Updated to accept only Staff object
         String sql = "INSERT INTO staff (username, password, full_name, contact_number) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, staff.getUsername());
-            ps.setString(2, hashed);
+            ps.setString(2, staff.getPassword()); // Password is pre-hashed in Servlet
             ps.setString(3, staff.getFullName());
             ps.setString(4, staff.getContactNumber());
 
@@ -40,7 +35,7 @@ public class StaffDAOImpl implements StaffDAO {
 
     @Override
     public Staff getStaffById(int id) {
-        String sql = "SELECT id, username, full_name, contact_number FROM staff WHERE id = ?";
+        String sql = "SELECT id, username, full_name, contact_number, password FROM staff WHERE id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -53,6 +48,7 @@ public class StaffDAOImpl implements StaffDAO {
                 s.setUsername(rs.getString("username"));
                 s.setFullName(rs.getString("full_name"));
                 s.setContactNumber(rs.getString("contact_number"));
+                s.setPassword(rs.getString("password")); // Added to resolve model errors
                 return s;
             }
         } catch (SQLException e) {
@@ -63,7 +59,7 @@ public class StaffDAOImpl implements StaffDAO {
 
     @Override
     public StaffAuthDTO getStaffByUsername(String username) {
-        String sql = "SELECT id, username, password, full_name, contact_number FROM staff WHERE username = ?";
+        String sql = "SELECT id, username, password FROM staff WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -107,29 +103,17 @@ public class StaffDAOImpl implements StaffDAO {
     }
 
     @Override
-    public boolean updateStaff(Staff staff, String newPlainPassword) {
-        String sql;
-        boolean hasNewPassword = newPlainPassword != null && !newPlainPassword.trim().isEmpty();
-
-        if (hasNewPassword) {
-            sql = "UPDATE staff SET full_name = ?, contact_number = ?, password = ? WHERE id = ?";
-        } else {
-            sql = "UPDATE staff SET full_name = ?, contact_number = ? WHERE id = ?";
-        }
+    public boolean updateStaff(Staff staff) {
+        // Updated to accept only Staff object
+        String sql = "UPDATE staff SET full_name = ?, contact_number = ?, password = ? WHERE id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, staff.getFullName());
             ps.setString(2, staff.getContactNumber());
-
-            if (hasNewPassword) {
-                String hashed = PasswordUtil.hashPassword(newPlainPassword);
-                ps.setString(3, hashed);
-                ps.setInt(4, staff.getId());
-            } else {
-                ps.setInt(3, staff.getId());
-            }
+            ps.setString(3, staff.getPassword()); // Use password already set in the object
+            ps.setInt(4, staff.getId());
 
             return ps.executeUpdate() > 0;
 

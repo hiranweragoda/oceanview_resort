@@ -22,6 +22,15 @@ public class ViewReservationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // Security Check: Allow both ADMIN and STAFF
+        HttpSession session = request.getSession(false);
+        String role = (session != null) ? (String) session.getAttribute("role") : null;
+
+        if (session == null || role == null || (!"STAFF".equals(role) && !"ADMIN".equals(role))) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
         String action = request.getParameter("action");
         
         if ("edit".equals(action)) {
@@ -32,15 +41,15 @@ public class ViewReservationServlet extends HttpServlet {
             request.getRequestDispatcher("/edit-reservation.jsp").forward(request, response);
         } 
         else if ("cancel".equals(action)) {
-            // FIX: Added Cancel Logic
             String resNumber = request.getParameter("reservationNumber");
             if (reservationDAO.deleteReservation(resNumber)) {
                 request.setAttribute("success", "Reservation " + resNumber + " cancelled successfully!");
+            } else {
+                request.setAttribute("error", "Failed to cancel reservation.");
             }
             listReservations(request, response);
         } 
         else if ("search".equals(action)) {
-            // FIX: Added Search Logic for GET (optional, but good for UX)
             handleSearch(request, response);
         }
         else {
@@ -51,24 +60,37 @@ public class ViewReservationServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        // Security Check: Allow both ADMIN and STAFF
+        HttpSession session = request.getSession(false);
+        String role = (session != null) ? (String) session.getAttribute("role") : null;
+
+        if (session == null || role == null || (!"STAFF".equals(role) && !"ADMIN".equals(role))) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
         String action = request.getParameter("action");
 
         if ("update".equals(action)) {
             String resNumber = request.getParameter("reservationNumber");
             Reservation res = reservationDAO.getReservationByNumber(resNumber);
             
-            res.setRoomTypeId(Integer.parseInt(request.getParameter("roomTypeId")));
-            res.setCheckInDate(LocalDate.parse(request.getParameter("checkInDate")));
-            res.setCheckOutDate(LocalDate.parse(request.getParameter("checkOutDate")));
-            res.setPhoneNumber(request.getParameter("phoneNumber"));
+            if (res != null) {
+                res.setRoomTypeId(Integer.parseInt(request.getParameter("roomTypeId")));
+                res.setCheckInDate(LocalDate.parse(request.getParameter("checkInDate")));
+                res.setCheckOutDate(LocalDate.parse(request.getParameter("checkOutDate")));
+                res.setPhoneNumber(request.getParameter("phoneNumber"));
 
-            if (reservationDAO.updateReservation(res)) {
-                request.setAttribute("success", "Reservation " + resNumber + " updated successfully!");
+                if (reservationDAO.updateReservation(res)) {
+                    request.setAttribute("success", "Reservation " + resNumber + " updated successfully!");
+                } else {
+                    request.setAttribute("error", "Failed to update reservation.");
+                }
             }
             listReservations(request, response);
         } 
         else if ("search".equals(action)) {
-            // FIX: Handled Search in POST
             handleSearch(request, response);
         }
     }
@@ -79,7 +101,9 @@ public class ViewReservationServlet extends HttpServlet {
         String value = request.getParameter("searchValue");
         
         List<Reservation> filteredList;
-        if ("phoneNumber".equals(type)) {
+        if (value == null || value.trim().isEmpty()) {
+            filteredList = reservationDAO.getAllReservations();
+        } else if ("phoneNumber".equals(type)) {
             filteredList = reservationDAO.searchByPhone(value);
         } else {
             filteredList = reservationDAO.searchByNumber(value);

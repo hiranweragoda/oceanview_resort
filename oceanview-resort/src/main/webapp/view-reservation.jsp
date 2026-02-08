@@ -7,7 +7,8 @@
     String role = (sess != null) ? (String) sess.getAttribute("role") : null;
     String username = (sess != null) ? (String) sess.getAttribute("username") : null;
 
-    if (sess == null || !"STAFF".equals(role)) {
+    // UPDATED: Allow both ADMIN and STAFF roles to access this page
+    if (sess == null || role == null || (!"STAFF".equals(role) && !"ADMIN".equals(role))) {
         response.sendRedirect("index.jsp");
         return;
     }
@@ -17,7 +18,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Reservations - Staff</title>
+    <title>View Reservations - Ocean View Resort</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -33,8 +34,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid px-4">
-        <a class="navbar-brand fw-bold" href="staff-dashboard.jsp">
-            <i class="bi bi-building me-2"></i>Ocean View Resort - Staff
+        <%-- UI remains same: links to dashboard based on role context --%>
+        <a class="navbar-brand fw-bold" href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>">
+            <i class="bi bi-building me-2"></i>Ocean View Resort - Portal
         </a>
         <div class="navbar-nav ms-auto">
             <span class="nav-link fw-bold text-white">
@@ -59,7 +61,7 @@
         </div>
     </c:if>
 
-    <%-- Search Bar Section (Updated to method="get" to fix search reliability) --%>
+    <%-- Search Bar Section --%>
     <div class="card mb-4 shadow-sm border-0">
         <div class="card-body p-4 bg-white rounded">
             <form action="view-reservation" method="get" class="row g-3 align-items-end">
@@ -134,8 +136,6 @@
                                            class="btn btn-sm btn-warning text-white px-3" title="Update">
                                             <i class="bi bi-pencil-square me-1"></i> Update
                                         </a>
-                                        
-                                        <%-- Cancel Button fixed to pass action parameter via GET --%>
                                         <a href="view-reservation?action=cancel&reservationNumber=${r.reservationNumber}" 
                                            class="btn btn-sm btn-danger px-3" 
                                            onclick="return confirm('Are you sure you want to cancel this reservation?')" 
@@ -162,7 +162,7 @@
     </div>
     
     <div class="text-center mt-4">
-        <a href="staff-dashboard.jsp" class="btn btn-secondary px-4 shadow-sm">
+        <a href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>" class="btn btn-secondary px-4 shadow-sm">
             <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
         </a>
     </div>

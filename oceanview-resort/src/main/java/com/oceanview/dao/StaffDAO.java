@@ -5,11 +5,17 @@ import com.oceanview.model.StaffAuthDTO;
 import java.util.List;
 
 public interface StaffDAO {
-    boolean addStaff(Staff staff, String plainPassword);
+    
+    // Core CRUD operations
+    boolean addStaff(Staff staff); 
+    boolean updateStaff(Staff staff);
     Staff getStaffById(int id);
-    StaffAuthDTO getStaffByUsername(String username);   // changed to return DTO
     List<Staff> getAllStaff();
-    boolean updateStaff(Staff staff, String newPlainPassword);
     boolean deleteStaff(int id);
+
+    // FIX for LoginServlet error (Line 68)
+    StaffAuthDTO getStaffByUsername(String username);
+
+    // FIX for StaffDAOImpl override errors (Line 142)
     boolean usernameExists(String username);
 }

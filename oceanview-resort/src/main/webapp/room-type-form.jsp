@@ -1,10 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false" %>  <!-- Force EL to be evaluated -->
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ page import="com.oceanview.model.User, com.oceanview.model.RoomType" %>
+<%@ page isELIgnored="false" %>  <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- Import both models to support the new admin table and prevent ClassCastException --%>
+<%@ page import="com.oceanview.model.User, com.oceanview.model.Admin, com.oceanview.model.RoomType" %>
 <%
-    User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    // Fix: Use a generic Object to safely retrieve the session user
+    Object sessionUser = session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+
+    // Security Check: Verify login and ADMIN role using the role string
+    if (sessionUser == null || !"ADMIN".equals(role)) {
         response.sendRedirect("index.jsp");
         return;
     }
@@ -12,7 +16,8 @@
     // Get the room type object passed by the servlet
     RoomType roomType = (RoomType) request.getAttribute("roomType");
     if (roomType == null) {
-        request.setAttribute("error", "Room type not found.");
+        // Use session attribute for error to survive the redirect if needed, 
+        // but here we redirect back to the list
         response.sendRedirect("roomType");
         return;
     }

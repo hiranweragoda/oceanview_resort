@@ -1,10 +1,22 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="com.oceanview.model.User" %>
+<%@ page import="com.oceanview.model.User, com.oceanview.model.Admin" %>
 <%
-    User user = (User) session.getAttribute("user");
-    if (user == null || !"ADMIN".equals(user.getRole())) {
+    // Updated logic to handle both master User and managed Admin objects
+    Object userObj = session.getAttribute("user");
+    String role = (String) session.getAttribute("role");
+    String displayName = "Administrator";
+
+    // Security Check: Redirect if not logged in as ADMIN
+    if (userObj == null || !"ADMIN".equals(role)) {
         response.sendRedirect("index.jsp");
         return;
+    }
+
+    // Determine the name to display based on the specific model type
+    if (userObj instanceof User) {
+        displayName = ((User) userObj).getUsername();
+    } else if (userObj instanceof Admin) {
+        displayName = ((Admin) userObj).getFullname();
     }
 %>
 <!DOCTYPE html>
@@ -20,9 +32,7 @@
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
-        .navbar-brand {
-            font-weight: 700;
-        }
+        .navbar-brand { font-weight: 700; }
         .card {
             transition: all 0.3s ease;
             border: none;
@@ -50,11 +60,14 @@
             font-weight: 700;
             color: #0d6efd;
         }
+        /* Specific styling for Admin Management to highlight security settings */
+        .admin-manage-card {
+            border-top: 5px solid #dc3545;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container-fluid px-4">
             <a class="navbar-brand" href="admin-dashboard.jsp">
@@ -67,7 +80,7 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
                         <span class="nav-link fw-bold text-white">
-                            <i class="bi bi-person-circle me-2"></i><%= user.getUsername() %>
+                            <i class="bi bi-person-circle me-2"></i>Welcome, <%= displayName %>
                         </span>
                     </li>
                     <li class="nav-item">
@@ -80,7 +93,6 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="container py-5">
         <div class="row mb-5">
             <div class="col-12 text-center">
@@ -89,17 +101,16 @@
             </div>
         </div>
 
-        <!-- Quick Stats (placeholders – replace with real queries later) -->
         <div class="row mb-5 quick-stats mx-auto" style="max-width: 900px;">
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center border-end">
                 <div class="stat-number">142</div>
                 <div class="text-muted">Active Bookings</div>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center border-end">
                 <div class="stat-number">87%</div>
                 <div class="text-muted">Occupancy Rate</div>
             </div>
-            <div class="col-md-3 text-center">
+            <div class="col-md-3 text-center border-end">
                 <div class="stat-number">$12,450</div>
                 <div class="text-muted">Today's Revenue</div>
             </div>
@@ -109,23 +120,43 @@
             </div>
         </div>
 
-        <!-- Management Cards -->
         <div class="row g-4 justify-content-center">
-            <!-- Reservations -->
+            
             <div class="col-md-4 col-lg-3">
                 <div class="card h-100 text-center">
                     <div class="card-body py-5">
-                        <i class="bi bi-calendar-check card-icon"></i>
-                        <h5 class="card-title fw-bold">Manage Reservations</h5>
-                        <p class="card-text text-muted mb-4">View, modify, cancel bookings</p>
-                        <a href="view-all-reservations.jsp" class="btn btn-primary btn-lg w-75">
-                            Manage Reservations
+                        <i class="bi bi-people-fill card-icon"></i>
+                        <h5 class="card-title fw-bold">Manage Admins</h5>
+                        <p class="card-text text-muted mb-4">Add, edit, or remove administrators</p>
+                        <a href="admin-manage?action=list" class="btn btn-primary btn-lg w-75">
+                            Manage Admins
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Room Types -->
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body py-5">
+                        <i class="bi bi-people-fill card-icon"></i>
+                        <h5 class="card-title fw-bold">Manage Staff</h5>
+                        <p class="card-text text-muted mb-4">Add, edit, delete staff accounts</p>
+                        <a href="staff" class="btn btn-primary btn-lg w-75">Manage Staff</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-lg-3">
+                <div class="card h-100 text-center">
+                    <div class="card-body py-5">
+                        <i class="bi bi-calendar-check card-icon"></i>
+                        <h5 class="card-title fw-bold">Reservations</h5>
+                        <p class="card-text text-muted mb-4">View, modify, cancel bookings</p>
+                        <a href="view-reservation" class="btn btn-primary btn-lg w-75">Search</a>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-md-4 col-lg-3">
                 <div class="card h-100 text-center">
                     <div class="card-body py-5">
@@ -139,45 +170,19 @@
                 </div>
             </div>
 
-            <!-- Reports -->
             <div class="col-md-4 col-lg-3">
                 <div class="card h-100 text-center">
                     <div class="card-body py-5">
                         <i class="bi bi-graph-up-arrow card-icon"></i>
                         <h5 class="card-title fw-bold">Reports & Analytics</h5>
                         <p class="card-text text-muted mb-4">Revenue, occupancy, performance</p>
-                        <a href="reports.jsp" class="btn btn-primary btn-lg w-75">
-                            View Reports
-                        </a>
+                        <a href="admin-reports" class="btn btn-primary">View Reports</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Staff Management -->
-         <div class="col-md-4 col-lg-3">
-    <div class="card h-100 text-center">
-        <div class="card-body py-5">
-            <i class="bi bi-people-fill card-icon"></i>
-            <h5 class="card-title fw-bold">Manage Staff</h5>
-            <p class="card-text text-muted mb-4">Add, edit, delete staff accounts</p>
-            <a href="staff" class="btn btn-primary btn-lg w-75">Manage Staff</a>
-        </div>
-    </div>
-</div>
-
-            <!-- System Settings -->
-            <div class="col-md-4 col-lg-3">
-                <div class="card h-100 text-center">
-                    <div class="card-body py-5">
-                        <i class="bi bi-gear-fill card-icon"></i>
-                        <h5 class="card-title fw-bold">System Settings</h5>
-                        <p class="card-text text-muted mb-4">Taxes, policies, notifications</p>
-                        <a href="settings.jsp" class="btn btn-primary btn-lg w-75">
-                            Settings
-                        </a>
-                    </div>
-                </div>
-            </div>
+          
+            
         </div>
     </div>
 
