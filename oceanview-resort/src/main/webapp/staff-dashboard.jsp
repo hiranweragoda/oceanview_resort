@@ -124,7 +124,7 @@
                     <i class="bi bi-door-open-fill card-icon text-primary"></i>
                     <h5 class="card-title fw-bold">Check-in / Check-out</h5>
                     <p class="card-text text-muted">Update reservation status</p>
-                    <a href="checkin-checkout.jsp" class="btn btn-primary btn-lg w-75">Manage</a>
+                    <a href="check-in-checkout.jsp" class="btn btn-primary btn-lg w-75">Manage</a>
                 </div>
             </div>
         </div>

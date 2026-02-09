@@ -8,7 +8,6 @@ public class RoomType {
     private String typeName;
     private BigDecimal ratePerNight;
 
-    // Constructors
     public RoomType() {}
 
     public RoomType(String typeName, BigDecimal ratePerNight) {
@@ -16,7 +15,6 @@ public class RoomType {
         this.ratePerNight = ratePerNight;
     }
 
-    // Getters and Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

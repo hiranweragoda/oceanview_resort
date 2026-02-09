@@ -139,6 +139,22 @@
             </div>
         </div>
 
+        <!-- Check-in / Check-out (NEW) -->
+        <div class="col-md-6">
+            <div class="card help-card">
+                <div class="card-body">
+                    <h4 class="section-title"><i class="bi bi-door-open-fill me-2"></i>Check-in / Check-out</h4>
+                    <ul class="list-unstyled">
+                        <li><i class="bi bi-check2 me-2 text-success"></i>Verify guest identity before check-in</li>
+                        <li><i class="bi bi-check2 me-2 text-success"></i>Assign room and update status to CHECKED_IN</li>
+                        <li><i class="bi bi-check2 me-2 text-success"></i>Calculate final bill before check-out</li>
+                        <li><i class="bi bi-check2 me-2 text-success"></i>Update status to CHECKED_OUT and mark room available</li>
+                        <li><i class="bi bi-check2 me-2 text-success"></i>Use today's date filter for quick access</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <!-- Billing -->
         <div class="col-md-6">
             <div class="card help-card">

@@ -12,66 +12,9 @@ import java.util.List;
 public class RoomTypeDAOImpl implements RoomTypeDAO {
 
     @Override
-    public void addRoomType(RoomType roomType) {
-        String sql = "INSERT INTO room_types (type_name, rate_per_night) VALUES (?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, roomType.getTypeName().trim());
-            ps.setBigDecimal(2, roomType.getRatePerNight());
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Error adding room type: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public RoomType getRoomTypeById(int id) {
-        String sql = "SELECT * FROM room_types WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                RoomType rt = new RoomType();
-                rt.setId(rs.getInt("id"));
-                rt.setTypeName(rs.getString("type_name"));
-                rt.setRatePerNight(rs.getBigDecimal("rate_per_night"));
-                return rt;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching room type by ID", e);
-        }
-        return null;
-    }
-
-    @Override
-    public RoomType getRoomTypeByName(String typeName) {
-        String sql = "SELECT * FROM room_types WHERE type_name = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, typeName.trim());
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                RoomType rt = new RoomType();
-                rt.setId(rs.getInt("id"));
-                rt.setTypeName(rs.getString("type_name"));
-                rt.setRatePerNight(rs.getBigDecimal("rate_per_night"));
-                return rt;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching room type by name", e);
-        }
-        return null;
-    }
-
-    @Override
     public List<RoomType> getAllRoomTypes() {
-        List<RoomType> list = new ArrayList<>();
-        String sql = "SELECT * FROM room_types ORDER BY type_name ASC";
+        List<RoomType> roomTypes = new ArrayList<>();
+        String sql = "SELECT * FROM room_types ORDER BY id";
 
         try (Connection conn = DBConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -82,12 +25,58 @@ public class RoomTypeDAOImpl implements RoomTypeDAO {
                 rt.setId(rs.getInt("id"));
                 rt.setTypeName(rs.getString("type_name"));
                 rt.setRatePerNight(rs.getBigDecimal("rate_per_night"));
-                list.add(rt);
+                roomTypes.add(rt);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Error fetching all room types", e);
+            e.printStackTrace();
         }
-        return list;
+        return roomTypes;
+    }
+
+    @Override
+    public RoomType getRoomTypeById(int id) {
+        String sql = "SELECT * FROM room_types WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                RoomType rt = new RoomType();
+                rt.setId(rs.getInt("id"));
+                rt.setTypeName(rs.getString("type_name"));
+                rt.setRatePerNight(rs.getBigDecimal("rate_per_night"));
+                return rt;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean addRoomType(RoomType roomType) {
+        String sql = "INSERT INTO room_types (type_name, rate_per_night) VALUES (?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setString(1, roomType.getTypeName());
+            ps.setBigDecimal(2, roomType.getRatePerNight());
+
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    roomType.setId(generatedKeys.getInt(1));
+                }
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
@@ -96,14 +85,14 @@ public class RoomTypeDAOImpl implements RoomTypeDAO {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, roomType.getTypeName().trim());
+            ps.setString(1, roomType.getTypeName());
             ps.setBigDecimal(2, roomType.getRatePerNight());
             ps.setInt(3, roomType.getId());
 
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
-            throw new RuntimeException("Error updating room type", e);
+            e.printStackTrace();
+            return false;
         }
     }
 
@@ -115,10 +104,9 @@ public class RoomTypeDAOImpl implements RoomTypeDAO {
 
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
-
         } catch (SQLException e) {
-            // You may want to handle foreign key constraint exception here
-            throw new RuntimeException("Error deleting room type: " + e.getMessage(), e);
+            e.printStackTrace();
+            return false;
         }
     }
 }

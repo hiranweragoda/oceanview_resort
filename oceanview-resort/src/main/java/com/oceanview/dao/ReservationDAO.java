@@ -4,12 +4,16 @@ import com.oceanview.model.Reservation;
 import java.util.List;
 
 public interface ReservationDAO {
-    List<Reservation> getAllReservations();
-    Reservation getReservationByNumber(String resNumber);
+
+    String generateReservationNumber();
     boolean addReservation(Reservation reservation);
+    Reservation getReservationByNumber(String reservationNumber);
+    List<Reservation> getAllReservations();
     boolean updateReservation(Reservation reservation);
-    boolean deleteReservation(String resNumber); 
-    List<Reservation> searchByNumber(String resNumber);
-    List<Reservation> searchByPhone(String phone);
-    String generateReservationNumber(); // Required for AddReservationServlet
+    boolean cancelReservation(String reservationNumber);
+    boolean deleteReservation(String reservationNumber);
+    List<Reservation> searchByNumber(String reservationNumber);
+    List<Reservation> searchByPhone(String phoneNumber);
+    List<Reservation> getReservationsByStatus(String status);
+    boolean hasActiveReservationsForRoomType(int roomTypeId);
 }

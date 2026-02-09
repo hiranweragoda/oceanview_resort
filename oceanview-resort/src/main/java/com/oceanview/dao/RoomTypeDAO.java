@@ -4,10 +4,15 @@ import com.oceanview.model.RoomType;
 import java.util.List;
 
 public interface RoomTypeDAO {
-    void addRoomType(RoomType roomType);
-    RoomType getRoomTypeById(int id);
-    RoomType getRoomTypeByName(String typeName);
+
     List<RoomType> getAllRoomTypes();
+
+    RoomType getRoomTypeById(int id);
+
+    // Added these three methods to match what your servlet is calling
+    boolean addRoomType(RoomType roomType);
+
     boolean updateRoomType(RoomType roomType);
+
     boolean deleteRoomType(int id);
 }

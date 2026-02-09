@@ -17,9 +17,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+import java.time.format.DateTimeParseException;  // ← THIS LINE FIXES YOUR ERROR
 import java.util.List;
+import java.util.stream.Collectors;
 
 @WebServlet("/add-reservation")
 public class AddReservationServlet extends HttpServlet {
@@ -38,8 +40,19 @@ public class AddReservationServlet extends HttpServlet {
             return;
         }
 
-        List<RoomType> roomTypes = roomTypeDAO.getAllRoomTypes();
-        request.setAttribute("roomTypes", roomTypes);
+        List<RoomType> allRoomTypes = roomTypeDAO.getAllRoomTypes();
+
+        List<Reservation> activeReservations = reservationDAO.getReservationsByStatus("CHECKED_IN");
+
+        java.util.Set<Integer> occupiedRoomTypeIds = activeReservations.stream()
+                .map(Reservation::getRoomTypeId)
+                .collect(Collectors.toSet());
+
+        List<RoomType> availableRoomTypes = allRoomTypes.stream()
+                .filter(rt -> !occupiedRoomTypeIds.contains(rt.getId()))
+                .collect(Collectors.toList());
+
+        request.setAttribute("roomTypes", availableRoomTypes);
 
         String guestIdStr = request.getParameter("guestId");
         Guest preSelectedGuest = null;
@@ -53,11 +66,10 @@ public class AddReservationServlet extends HttpServlet {
                     warning = "The selected guest was not found.";
                 }
             } catch (NumberFormatException e) {
-                warning = "Invalid guest ID in URL.";
+                warning = "Invalid guest ID format.";
             }
         }
 
-        // Using "preSelectedGuest" as the key
         request.setAttribute("preSelectedGuest", preSelectedGuest);
         if (warning != null) request.setAttribute("warning", warning);
 
@@ -78,22 +90,14 @@ public class AddReservationServlet extends HttpServlet {
         String successMsg = null;
 
         try {
-            String guestIdStr = request.getParameter("guestId");
-            if (guestIdStr == null || guestIdStr.trim().isEmpty()) {
-                throw new IllegalArgumentException("Guest ID is missing.");
-            }
-            int guestId = Integer.parseInt(guestIdStr.trim());
+            int guestId = Integer.parseInt(request.getParameter("guestId").trim());
+            int roomTypeId = Integer.parseInt(request.getParameter("roomTypeId").trim());
 
-            String roomTypeIdStr = request.getParameter("roomTypeId");
-            int roomTypeId = Integer.parseInt(roomTypeIdStr.trim());
+            LocalDate checkIn = LocalDate.parse(request.getParameter("checkInDate").trim());
+            LocalDate checkOut = LocalDate.parse(request.getParameter("checkOutDate").trim());
 
-            String checkInStr = request.getParameter("checkInDate");
-            String checkOutStr = request.getParameter("checkOutDate");
-            LocalDate checkIn = LocalDate.parse(checkInStr.trim());
-            LocalDate checkOut = LocalDate.parse(checkOutStr.trim());
-
-            if (checkIn.isAfter(checkOut) || checkIn.isEqual(checkOut)) {
-                throw new IllegalArgumentException("Check-out must be after check-in.");
+            if (!checkOut.isAfter(checkIn)) {
+                throw new IllegalArgumentException("Check-out date must be after the check-in date.");
             }
 
             String phoneNumber = request.getParameter("phoneNumber");
@@ -105,19 +109,28 @@ public class AddReservationServlet extends HttpServlet {
             reservation.setCheckInDate(checkIn);
             reservation.setCheckOutDate(checkOut);
             reservation.setPhoneNumber(phoneNumber);
+            reservation.setStatus("CHECKED_IN");
 
             if (reservationDAO.addReservation(reservation)) {
-                successMsg = "Reservation created! No: " + reservation.getReservationNumber();
+                successMsg = "Reservation successful! ID: " + reservation.getReservationNumber();
             } else {
-                errorMsg = "Database error.";
+                errorMsg = "System error: Could not save reservation.";
             }
 
+        } catch (NumberFormatException e) {
+            errorMsg = "Invalid number format in form data.";
+            e.printStackTrace();
+        } catch (DateTimeParseException e) {
+            errorMsg = "Invalid date format.";
+            e.printStackTrace();
         } catch (Exception e) {
-            errorMsg = e.getMessage();
+            errorMsg = "Booking Error: " + e.getMessage();
+            e.printStackTrace();
         }
 
         request.setAttribute("error", errorMsg);
         request.setAttribute("success", successMsg);
+
         doGet(request, response);
     }
 }

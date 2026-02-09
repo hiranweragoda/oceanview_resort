@@ -48,18 +48,22 @@
 <div class="container mt-4">
     <h2 class="mb-4">Staff Management</h2>
 
-    <%-- Success/Error Alerts --%>
-    <c:if test="${not empty success}">
+    <%-- FIXED: Success/Error Alerts with Automatic Cleanup --%>
+    <%-- This prevents messages from showing on the Reservation List or other pages --%>
+    <c:if test="${not empty sessionScope.success}">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle me-2"></i>${success}
+            <i class="bi bi-check-circle me-2"></i>${sessionScope.success}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <c:remove var="success" scope="session" />
     </c:if>
-    <c:if test="${not empty error}">
+
+    <c:if test="${not empty sessionScope.error}">
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>${error}
+            <i class="bi bi-exclamation-triangle me-2"></i>${sessionScope.error}
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <c:remove var="error" scope="session" />
     </c:if>
 
     <div class="card mb-4 shadow-sm border-0">
