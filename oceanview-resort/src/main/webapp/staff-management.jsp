@@ -46,7 +46,7 @@
 </nav>
 
 <div class="container mt-4">
-    <h2 class="mb-4">Staff Management</h2>
+    <h2 class="mb-4 text-center fw-bold">Staff Management</h2>
 
     <%-- FIXED: Success/Error Alerts with Automatic Cleanup --%>
     <%-- This prevents messages from showing on the Reservation List or other pages --%>

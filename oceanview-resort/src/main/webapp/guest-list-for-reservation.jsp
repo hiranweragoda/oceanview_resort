@@ -32,7 +32,7 @@
 </nav>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Select Guest to Create Reservation</h2>
+    <h2 class="mb-4 text-center fw-bold">Select Guest to Create Reservation</h2>
 
     <div class="card shadow-sm">
         <div class="card-body p-0">
@@ -77,6 +77,13 @@
             </div>
         </div>
     </div>
+    
+    <div class="text-center mt-4">
+        <a href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>" class="btn btn-secondary px-4 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+    
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

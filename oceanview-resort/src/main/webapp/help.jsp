@@ -64,7 +64,7 @@
 </nav>
 
 <div class="container mt-5">
-    <h1 class="text-center mb-5">Help & Guidelines</h1>
+    <h1 class="mb-4 text-center fw-bold">Help & Guidelines</h1>
 
     <!-- Quick Start -->
     <div class="row g-4 mb-5">
@@ -182,6 +182,12 @@
                 </div>
             </div>
         </div>
+        
+        <div class="text-center mt-4">
+        <a href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>" class="btn btn-secondary px-4 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
     </div>
 
     <div class="text-center mt-5">

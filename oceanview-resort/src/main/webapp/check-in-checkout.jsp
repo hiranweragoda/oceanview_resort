@@ -18,9 +18,9 @@
 <body>
 
 <div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold"><i class="bi bi-door-closed me-2"></i>Guest Check-In / Out</h2>
-        <a href="staff-dashboard.jsp" class="btn btn-outline-secondary">Back to Dashboard</a>
+    <div class="mb-4 text-center fw-bold">
+        <h2 class="mb-4 text-center fw-bold"></i>Guest Check-In / Out</h2>
+      
     </div>
 
     <div class="card table-card">
@@ -94,6 +94,12 @@
                 </tbody>
             </table>
         </div>
+    </div>
+    <% String role = (String) session.getAttribute("role"); %>
+    <div class="text-center mt-4">
+        <a href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>" class="btn btn-secondary px-4 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
     </div>
 </div>
 

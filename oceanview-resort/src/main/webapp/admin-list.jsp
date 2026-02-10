@@ -31,6 +31,8 @@
     </div>
 </nav>
 <div class="container">
+
+ <h2 class="mb-4 text-center fw-bold">Admin Management</h2>
     <div class="card mb-4 border-0 shadow-sm">
         <div class="header-blue"><i class="bi bi-person-plus-fill me-2"></i>Add New Admin Member</div>
         <div class="card-body">

@@ -20,7 +20,7 @@
         <c:remove var="success" scope="session" />
     </c:if>
 
-    <h2>Payment Records <span class="badge bg-secondary">Total: ${paymentList.size()}</span></h2>
+ <h2 class="mb-4 text-center fw-bold">Payment Records</h2>
     
     <div class="card shadow-sm mt-3">
         <table class="table table-hover">

@@ -33,7 +33,7 @@
 </nav>
 
 <div class="container mt-4">
-    <h2 class="mb-4">Guest Management</h2>
+    <h2 class="mb-4 text-center fw-bold">Guest Management</h2>
 
     <c:if test="${not empty success}">
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -131,6 +131,12 @@
                 </table>
             </div>
         </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>" class="btn btn-secondary px-4 shadow-sm">
+            <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
     </div>
 </div>
 
