@@ -45,8 +45,8 @@
         <div class="resort-header">
             <div class="resort-name">OCEAN VIEW RESORT</div>
             <div class="resort-info">
-                123 Coastal Drive, Colombo, Sri Lanka<br>
-                <i class="bi bi-telephone-fill"></i> +94 11 234 5678 | <i class="bi bi-envelope-fill"></i> info@oceanviewresort.com
+                123 Gnanobasha Mawatha, Oroppuwatta, Galle, Sri Lanka<br>
+                <i class="bi bi-telephone-fill"></i> +94 91 222233 | <i class="bi bi-envelope-fill"></i> info@oceanviewresort.com
             </div>
         </div>
 

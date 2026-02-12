@@ -53,7 +53,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="staff-dashboard.jsp">
-            <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort - Staff
+            <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort 
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>

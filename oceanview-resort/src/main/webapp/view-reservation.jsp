@@ -36,7 +36,7 @@
     <div class="container-fluid px-4">
         <%-- UI remains same: links to dashboard based on role context --%>
         <a class="navbar-brand fw-bold" href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>">
-            <i class="bi bi-building me-2"></i>Ocean View Resort - Portal
+              <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort
         </a>
         <div class="navbar-nav ms-auto">
             <span class="nav-link fw-bold text-white">

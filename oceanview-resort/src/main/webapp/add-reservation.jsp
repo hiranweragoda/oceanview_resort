@@ -56,7 +56,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="staff-dashboard.jsp">
-            <i class="bi bi-water me-2"></i>Ocean View Resort
+            <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort
         </a>
         <div class="navbar-nav ms-auto">
             <span class="nav-link fw-bold text-white">

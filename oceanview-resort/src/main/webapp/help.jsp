@@ -48,17 +48,19 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid">
-        <a class="navbar-brand" href="staff-dashboard.jsp">
-            <i class="bi bi-building me-2"></i>Ocean View Resort - Staff
+        <a class="navbar-brand fw-bold" href="staff-dashboard.jsp">
+            <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort
         </a>
         <div class="navbar-nav ms-auto">
             <span class="nav-link fw-bold text-white">
-                <i class="bi bi-person-circle me-2"></i><%= username %>
+                <i class="bi bi-person-circle me-2"></i><%= sess.getAttribute("username") %>
             </span>
-            <a class="nav-link btn btn-outline-light ms-2" href="logout"
-               onclick="return confirm('Are you sure you want to logout?');">
-                <i class="bi bi-box-arrow-right me-2"></i>Logout
-            </a>
+             <li class="nav-item">
+                    <a class="nav-link btn btn-outline-light ms-2" href="logout" 
+                       onclick="return confirm('Are you sure you want to logout?');">
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                    </a>
+                </li>
         </div>
     </div>
 </nav>
