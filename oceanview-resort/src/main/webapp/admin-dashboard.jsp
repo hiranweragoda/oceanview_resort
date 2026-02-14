@@ -66,22 +66,17 @@
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand" href="admin-dashboard.jsp">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="admin-dashboard.jsp">
                 <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort
             </a>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <span class="nav-link fw-bold text-white">
-                            <i class="bi bi-person-circle me-2"></i><%= displayName %> (Admin)
-                        </span>
-                    </li>
-                    <li class="nav-item ms-3">
-                        <a class="btn btn-danger btn-sm" href="logout">Logout</a>
-                    </li>
-                </ul>
+            <div class="navbar-nav ms-auto">
+                <span class="nav-link fw-bold text-white">
+                    <i class="bi bi-person-circle me-2"></i><%= displayName %>
+                </span>
+                <a class="nav-link btn btn-outline-light ms-2 px-3" href="logout" 
+                   onclick="return confirm('Are you sure you want to logout?');">Logout</a>
             </div>
         </div>
     </nav>
@@ -94,34 +89,17 @@
             </div>
         </div>
 
-        <div class="row mb-5 quick-stats mx-auto" style="max-width: 1000px;">
-            <div class="col-md-3 text-center border-end">
-                <div class="stat-number">142</div>
-                <div class="text-muted small fw-bold text-uppercase">Active Bookings</div>
-            </div>
-            <div class="col-md-3 text-center border-end">
-                <div class="stat-number">87%</div>
-                <div class="text-muted small fw-bold text-uppercase">Occupancy</div>
-            </div>
-            <div class="col-md-3 text-center border-end">
-                <div class="stat-number">$12,450</div>
-                <div class="text-muted small fw-bold text-uppercase">Daily Revenue</div>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="stat-number">28</div>
-                <div class="text-muted small fw-bold text-uppercase">Check-ins</div>
-            </div>
-        </div>
+     
 
         <div class="row g-4">
             
             <div class="col-md-4 col-lg-4">
                 <div class="card text-center">
                     <div class="card-body py-5">
-                        <i class="bi bi-cash-stack card-icon icon-green"></i>
+                        <i class="bi bi-cash-stack card-icon icon-blue"></i>
                         <h5 class="card-title fw-bold">Financial Records</h5>
                         <p class="card-text text-muted mb-4">View payment history and manage transactions</p>
-                        <a href="payment?action=list" class="btn btn-success btn-lg w-75 shadow-sm">
+                        <a href="payment?action=list" class="btn btn-primary btn-lg w-75 shadow-sm">
                             View Payments
                         </a>
                     </div>
@@ -130,11 +108,11 @@
 
             <div class="col-md-4 col-lg-4">
                 <div class="card text-center">
-                    <div class="card-body py-5 border-top border-danger border-5 rounded-top">
-                        <i class="bi bi-shield-lock-fill card-icon icon-red"></i>
+                    <div class="card-body py-5">
+                        <i class="bi bi-shield-lock-fill card-icon icon-blue"></i>
                         <h5 class="card-title fw-bold">System Admins</h5>
                         <p class="card-text text-muted mb-4">Manage high-level administrator access</p>
-                        <a href="admin-manage?action=list" class="btn btn-outline-danger btn-lg w-75">
+                        <a href="admin-manage?action=list" class="btn btn-primary btn-lg w-75 shadow-sm">
                             Manage Admins
                         </a>
                     </div>

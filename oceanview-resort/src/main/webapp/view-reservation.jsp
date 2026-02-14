@@ -1,16 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%-- Import models to handle the session objects correctly --%>
+<%@ page import="com.oceanview.model.User, com.oceanview.model.Admin" %>
 <%
     // Session and Role Security Check
     HttpSession sess = request.getSession(false);
+    Object sessionUser = (sess != null) ? sess.getAttribute("user") : null;
     String role = (sess != null) ? (String) sess.getAttribute("role") : null;
-    String username = (sess != null) ? (String) sess.getAttribute("username") : null;
+    
+    // Logic to prevent "null" display for both Admin and Staff
+    String displayName = "Guest"; 
 
-    // UPDATED: Allow both ADMIN and STAFF roles to access this page
     if (sess == null || role == null || (!"STAFF".equals(role) && !"ADMIN".equals(role))) {
         response.sendRedirect("index.jsp");
         return;
+    }
+
+    // Determine display name based on role and available session objects
+    if (sessionUser instanceof Admin) {
+        displayName = ((Admin) sessionUser).getFullname();
+    } else if (sessionUser instanceof User) {
+        displayName = ((User) sessionUser).getUsername();
+    } else if (sess.getAttribute("username") != null) {
+        displayName = (String) sess.getAttribute("username");
     }
 %>
 <!DOCTYPE html>
@@ -25,8 +38,6 @@
         body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; }
         .table thead th { background-color: #0d6efd; color: white; vertical-align: middle; }
         .btn-sm { padding: 0.25rem 0.5rem; }
-        /* Matching the header color from your reference image */
-        .card-header.bg-info { background-color: #0dcaf0 !important; }
         .list-header { background-color: #00bcd4; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; }
     </style>
 </head>
@@ -34,13 +45,12 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container-fluid px-4">
-        <%-- UI remains same: links to dashboard based on role context --%>
         <a class="navbar-brand fw-bold" href="<%= "ADMIN".equals(role) ? "admin-dashboard.jsp" : "staff-dashboard.jsp" %>">
               <i class="bi bi-building-fill-add me-2"></i>Ocean View Resort
         </a>
         <div class="navbar-nav ms-auto">
             <span class="nav-link fw-bold text-white">
-                <i class="bi bi-person-circle me-2"></i><%= username %>
+                <i class="bi bi-person-circle me-2"></i><%= displayName %>
             </span>
             <a class="nav-link btn btn-outline-light ms-2" href="logout" 
                onclick="return confirm('Are you sure you want to logout?');">
