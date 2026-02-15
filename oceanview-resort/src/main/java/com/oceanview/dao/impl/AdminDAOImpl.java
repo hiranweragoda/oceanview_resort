@@ -2,35 +2,55 @@ package com.oceanview.dao.impl;
 
 import com.oceanview.model.Admin;
 import com.oceanview.util.DBConnection;
+import com.oceanview.util.PasswordUtil; // Use your existing project utility
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdminDAOImpl {
 
-    // Fixed the error by adding this method for LoginServlet
     public Admin validateLogin(String username, String password) {
-        String sql = "SELECT * FROM admins WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM admins WHERE username = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setString(1, username);
-            ps.setString(2, password);
-            
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Admin a = new Admin();
-                    a.setId(rs.getInt("id"));
-                    a.setUsername(rs.getString("username"));
-                    a.setFullname(rs.getString("fullname"));
-                    a.setContactNumber(rs.getString("contact_number"));
-                    return a;
+                    String storedHash = rs.getString("password");
+                    
+                    // Verify password using your project's PasswordUtil
+                    if (PasswordUtil.checkPassword(password, storedHash)) {
+                        Admin a = new Admin();
+                        a.setId(rs.getInt("id"));
+                        a.setUsername(rs.getString("username"));
+                        a.setFullname(rs.getString("fullname"));
+                        a.setContactNumber(rs.getString("contact_number"));
+                        return a;
+                    }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean addAdmin(Admin a) {
+        // Hash password before inserting
+        String hashedPassword = PasswordUtil.hashPassword(a.getPassword());
+        String sql = "INSERT INTO admins (username, password, fullname, contact_number) VALUES (?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, a.getUsername());
+            ps.setString(2, hashedPassword);
+            ps.setString(3, a.getFullname());
+            ps.setString(4, a.getContactNumber());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public List<Admin> getAllAdmins() {
@@ -47,9 +67,7 @@ public class AdminDAOImpl {
                 a.setContactNumber(rs.getString("contact_number"));
                 list.add(a);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
         return list;
     }
 
@@ -69,29 +87,11 @@ public class AdminDAOImpl {
                     return a;
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        } catch (SQLException e) { e.printStackTrace(); }
         return null;
     }
 
-    public boolean addAdmin(Admin a) {
-        String sql = "INSERT INTO admins (username, password, fullname, contact_number) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, a.getUsername());
-            ps.setString(2, a.getPassword());
-            ps.setString(3, a.getFullname());
-            ps.setString(4, a.getContactNumber());
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
     public boolean updateAdmin(Admin a) {
-        // Updated to handle password changes optionally
         String sql = "UPDATE admins SET fullname=?, contact_number=?, password=? WHERE id=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -100,10 +100,7 @@ public class AdminDAOImpl {
             ps.setString(3, a.getPassword());
             ps.setInt(4, a.getId());
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 
     public boolean deleteAdmin(int id) {
@@ -112,9 +109,6 @@ public class AdminDAOImpl {
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+        } catch (SQLException e) { e.printStackTrace(); return false; }
     }
 }

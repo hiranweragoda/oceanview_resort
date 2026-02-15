@@ -70,7 +70,9 @@
                     <input type="text" name="contactNumber" class="form-control">
                 </div>
                 <div class="col-md-1 d-flex align-items-end">
-                    <button type="submit" class="btn btn-success w-100 shadow-sm">Add</button>
+                    <button type="submit" class=" bi bi-plus-circle btn btn-success w-100 shadow-sm "> Add</button>
+                    
+                   
                 </div>
             </form>
         </div>
@@ -92,13 +94,13 @@
                 <tbody>
                     <c:forEach var="a" items="${admins}">
                         <tr>
-                            <td class="ps-3 fw-bold">#${a.id}</td>
-                            <td><span class="badge bg-light text-primary border px-3">${a.username}</span></td>
+                            <td class="ps-3 fw-bold">${a.id}</td>
+                            <td><span class="">${a.username}</span></td>
                             <td>${a.fullname}</td>
                             <td>${a.contactNumber}</td>
                             <td>
                                 <a href="admin-manage?action=edit&id=${a.id}" class="btn btn-warning btn-sm text-white shadow-sm me-1">
-                                    <i class="bi bi-pencil-square me-1"></i> Edit
+                                    <i class="bi bi-pencil"></i> Edit
                                 </a>
                                 <a href="admin-manage?action=delete&id=${a.id}" class="btn btn-danger btn-sm shadow-sm" onclick="return confirm('Delete this Admin?')">
                                     <i class="bi bi-trash me-1"></i> Delete

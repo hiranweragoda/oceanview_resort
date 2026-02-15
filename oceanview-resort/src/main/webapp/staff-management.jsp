@@ -131,13 +131,13 @@
                     <tbody>
                         <c:forEach var="s" items="${staffList}">
                             <tr>
-                                <td class="fw-bold">#${s.id}</td>
-                                <td><span class="badge bg-light text-primary border px-3">${s.username}</span></td>
+                                <td class="fw-bold">${s.id}</td>
+                                <td><span class="">${s.username}</span></td>
                                 <td>${s.fullName}</td>
                                 <td>${s.contactNumber}</td>
                                 <td class="text-center">
                                     <a href="staff?action=edit&id=${s.id}" class="btn btn-sm btn-warning text-white shadow-sm me-1">
-                                        <i class="bi bi-pencil-square"></i> Edit
+                                        <i class="bi bi-pencil"></i> Edit
                                     </a>
                                     <a href="staff?action=delete&id=${s.id}" class="btn btn-sm btn-danger shadow-sm"
                                        onclick="return confirm('Delete ${s.username}?')">

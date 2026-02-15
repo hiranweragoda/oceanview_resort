@@ -77,8 +77,8 @@
             <table class="table table-hover align-middle mb-0 text-center">
                 <thead>
                     <tr>
-                        <th class="ps-4">ID</th>
-                        <th>Reservation #</th>
+                        
+                        <th>Reservation </th>
                         <th>Amount</th>
                         <th>Method</th>
                         <th>Payment Date</th>
@@ -88,13 +88,13 @@
                 <tbody>
                     <c:forEach var="p" items="${paymentList}">
                         <tr>
-                            <td class="ps-4">#${p.id}</td>
+                          
                             <td class="fw-bold text-primary">${p.reservationNumber}</td>
                             <td class="fw-bold">$${p.amount}</td>
                             <td><span class="badge bg-info text-dark" style="font-size: 0.85rem;">${p.paymentMethod}</span></td>
                             <td>${p.paymentDate}</td>
                             <td>
-                                <a href="payment?action=delete&id=${p.id}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this payment record?')">
+                                <a href="payment?action=delete&id=${p.id}" class="btn btn-danger btn-sm shadow-sm" onclick="return confirm('Are you sure you want to delete this payment record?')">
                                     <i class="bi bi-trash me-1"></i>Delete
                                 </a>
                             </td>

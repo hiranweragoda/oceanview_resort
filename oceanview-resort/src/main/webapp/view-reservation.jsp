@@ -146,6 +146,7 @@
                                            class="btn btn-sm btn-warning text-white px-3" title="Update">
                                             <i class="bi bi-pencil-square me-1"></i> Update
                                         </a>
+                                        
                                         <a href="view-reservation?action=cancel&reservationNumber=${r.reservationNumber}" 
                                            class="btn btn-sm btn-danger px-3" 
                                            onclick="return confirm('Are you sure you want to cancel this reservation?')" 

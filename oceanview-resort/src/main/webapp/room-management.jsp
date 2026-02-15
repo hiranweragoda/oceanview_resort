@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-md-3">
                         <button type="submit" class="btn btn-success w-100 shadow-sm">
-                            <i class="bi bi-plus-circle me-2"></i>Add Type
+                            <i class="bi bi-plus-circle me-2"></i>Add Room
                         </button>
                     </div>
                 </div>
@@ -120,8 +120,8 @@
                     <tbody>
                         <c:forEach var="rt" items="${roomTypes}">
                             <tr>
-                                <td class="fw-bold">#${rt.id}</td>
-                                <td><span class="badge bg-light text-primary border px-3">${rt.typeName}</span></td>
+                                <td class="fw-bold">${rt.id}</td>
+                                <td><span class="">${rt.typeName}</span></td>
                                 <td class="fw-bold text-success">$${rt.ratePerNight}</td>
                                 <td>
                                     <a href="roomType?action=edit&id=${rt.id}" class="btn btn-sm btn-warning text-white shadow-sm me-1">
