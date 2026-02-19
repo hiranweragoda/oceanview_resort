@@ -85,7 +85,7 @@
         <div class="row mb-5">
             <div class="col-12 text-center">
                 <h1 class="display-5 fw-bold text-dark mb-2">Admin Control Panel</h1>
-                <p class="lead text-muted">Complete system overview and management</p>
+                
             </div>
         </div>
 
