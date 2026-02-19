@@ -93,7 +93,14 @@
                     </div>
                 </div>
             </div>
-            
+            <div class="col-md-4">
+                <div class="card stat-card bg-staff shadow-sm p-3">
+                    <div class="card-body">
+                        <h6>Active Staff</h6>
+                        <h2>${stats.totalStaff}</h2>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="card stat-card bg-guests shadow-sm p-3">
                     <div class="card-body">
