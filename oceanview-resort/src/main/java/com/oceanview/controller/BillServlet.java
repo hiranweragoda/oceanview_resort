@@ -72,14 +72,7 @@ public class BillServlet extends HttpServlet {
                 request.setAttribute("filterStatus", searchValue);
             } else {
                 reservations = resDAO.getAllReservations();
-            }
-
-            // Always include these to populate Guest Name and Price columns in the table
-            request.setAttribute("reservations", reservations);
-            request.setAttribute("guests", guestDAO.getAllGuests());
-            request.setAttribute("roomTypes", roomDAO.getAllRoomTypes());
-            request.getRequestDispatcher("/bill-list.jsp").forward(request, response);
-        }
+           
     }
 
     @Override
