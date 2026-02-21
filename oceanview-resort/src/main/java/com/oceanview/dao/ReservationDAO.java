@@ -9,6 +9,8 @@ public interface ReservationDAO {
     boolean addReservation(Reservation reservation);
     Reservation getReservationByNumber(String reservationNumber);
     List<Reservation> getAllReservations();
+    boolean updateReservation(Reservation reservation);
+    boolean cancelReservation(String reservationNumber);
     boolean deleteReservation(String reservationNumber);
     List<Reservation> searchByNumber(String reservationNumber);
     List<Reservation> searchByPhone(String phoneNumber);
