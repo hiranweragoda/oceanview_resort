@@ -105,9 +105,7 @@ public class ViewReservationServlet extends HttpServlet {
             filteredList = reservationDAO.getAllReservations();
         } else if ("phoneNumber".equals(type)) {
             filteredList = reservationDAO.searchByPhone(value);
-        } else {
-            filteredList = reservationDAO.searchByNumber(value);
-        }
+       
         
         request.setAttribute("reservations", filteredList);
         request.setAttribute("guests", guestDAO.getAllGuests());
